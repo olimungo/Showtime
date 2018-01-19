@@ -2,8 +2,8 @@ ArrayList<String> images = new ArrayList<String>();
 ImagesLib imagesLib;
 Bubbles bubbles;
 
-float middleWidth = width / 2;
-float middleHeight = height / 2;
+float middleWidth = 1500 / 2;
+float middleHeight = 1000 / 2;
 
 Boolean starting = true;
 
@@ -11,8 +11,9 @@ void pre() {
 }
 
 void setup() {
-  size(1000, 800);
-  // fullScreen();
+  size(1500, 1000);
+  //fullScreen();
+  //frameRate(1);
 
   images.add("assets/oli_eye.jpg");
   images.add("assets/pedro.jpg");
@@ -33,8 +34,10 @@ void draw() {
   //   noLoop();
   // }
 
-  //translateSketch();
-  //drawPattern();
+  // translateSketch(4);
+  drawPattern();
+
+  
   
   bubbles.update();
   bubbles.draw();
@@ -47,9 +50,9 @@ void draw() {
   }
 }
 
-void translateSketch() {
-  scale(0.5);
-  translate(width / 2, height / 2);
+void translateSketch(float ratio) {
+  scale(1/ratio);
+  translate((width * ratio - width) / 2, (height * ratio - height) / 2);
 }
 
 void drawPattern() {
@@ -59,6 +62,7 @@ void drawPattern() {
     rect(0, 0, width, height);
     line(0, middleHeight, width, middleHeight);
     line(middleWidth, 0, middleWidth, height);
+    ellipse(middleWidth, middleHeight, 400, 400);
   popMatrix();
 }
 

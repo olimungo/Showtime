@@ -8,12 +8,12 @@ public class Bubbles {
     float rnd = random(1);
     
     for (BubbleMatrix bubble : matrix) {
-      PVector start = new PVector(random(width), random(height));
+      PVector start = new PVector(bubble.x, bubble.y);
       
-      if (rnd > 0.5) {
-        start = this.effectRadialIn(start);
+      if (rnd > 1) {
+        start = this.effectRadial(start);
       } else {
-        start = this.effectWaveIn(start);
+        start = this.effectWave(start);
       }
       
       this.bubbles.add(new Bubble(start.x, start.y, bubble.x, bubble.y, bubble.r, bubble.c));
@@ -39,7 +39,7 @@ public class Bubbles {
             this.effectOutTriggered = true;
 
             PVector target = new PVector(bubble.location.x, bubble.location.y);
-            target = this.effectRadialIn(target);
+            target = this.effectRadial(target);
             bubble.setTarget(target.x, target.y);
           }
         }
@@ -53,11 +53,12 @@ public class Bubbles {
     }
   }
   
-  private PVector effectRadialIn(PVector vector) {
+  private PVector effectRadial(PVector vector) {
     PVector vectorMiddle = new PVector(width / 2, height / 2);
+    float screenMagnitude = this.getScreenMagnitude();
     
     PVector vectorResult = PVector.sub(vector, vectorMiddle);
-    float magnitude = map(random(1), 0, 1, 1000, 1400);
+    float magnitude = map(random(1), 0, 1, screenMagnitude * 1.3, screenMagnitude * 1.7);
 
     vectorResult.setMag(magnitude);
     vectorResult.add(vectorMiddle);
@@ -65,37 +66,34 @@ public class Bubbles {
     return vectorResult;
   }
   
-  private PVector effectWaveIn(PVector vector) {
+  private PVector effectWave(PVector vector) {
     PVector vectorMiddle = new PVector(width / 2, height / 2);
     
     int extend = ceil(random(0, 4));
-    PVector vectorResult = PVector.sub(vectorMiddle, vector).add(vector);
 
     switch (extend) {
       case 1:
-        vectorResult.x *= -1;
+        vectorMiddle.x -= width / 2 * 1.2;
         break;
       case 2:
-        vectorResult.y *= -1;
+        vectorMiddle.y -= height / 2 * 1.2;
         break;
       case 3:
-        vectorResult.x += width;
+        vectorMiddle.x += width / 2 * 1.2;
         break;
       case 4:
-        vectorResult.y += height;
+        vectorMiddle.y += height / 2 * 1.2;
         break;
     }
 
-    return vectorResult;
+    return vectorMiddle;
   }
 
-  private PVector randomLocation() {
-    PVector vector = PVector.random2D();
+  private float getScreenMagnitude() {
+    PVector origin = new PVector(0, height);
+    PVector center = new PVector(middleWidth, middleHeight);
+    PVector result = PVector.sub(center, origin);
 
-    if (vector.x < width / 2 && vector.y < height /2) {
-
-    }
-
-    return vector;
+    return result.mag();
   }
 }

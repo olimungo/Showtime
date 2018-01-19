@@ -5,7 +5,7 @@ public class Particle extends Sprite {
   Boolean targetReached;
   
   float SLOW_DOWN_DISTANCE;
-  float MAX_SPEED;
+  float SPEED;
   float INERTIA;
   
   Particle(float x, float y, float radius) {
@@ -16,9 +16,9 @@ public class Particle extends Sprite {
     
     this.targetReached = false;
     
-    this.SLOW_DOWN_DISTANCE = 65;
-    this.MAX_SPEED = 10;
-    this.INERTIA = 1;
+    this.SLOW_DOWN_DISTANCE = 150;
+    this.SPEED = 15;
+    this.INERTIA = 20;
   }
   
   void setTarget(float x, float y) {
@@ -31,11 +31,13 @@ public class Particle extends Sprite {
     this.targetReached = false;
   }
   
+  @Override
   void update() {
     if (!this.targetReached) {
       this.behaviors();
       
-      this.location.add(this.velocity);
+      //this.location.add(this.velocity);
+      super.update();
       
       this.velocity.add(this.acceleration);
       this.acceleration.mult(0);
@@ -58,7 +60,7 @@ public class Particle extends Sprite {
   private PVector forceJoinTarget(PVector target) {
     PVector desired = PVector.sub(target, this.location);
     float distance = desired.mag();
-    float speed = this.MAX_SPEED;
+    float speed = this.SPEED;
     float inertia = this.INERTIA;
 
     if (distance < this.SLOW_DOWN_DISTANCE) {

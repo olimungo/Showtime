@@ -3,7 +3,7 @@ public class ImagesLib {
   ArrayList<PImage> images = new ArrayList<PImage>();
   
   int scaleFactor;
-  int dpi = 80;
+  int dpi = 90;
   int currentImage = -1;
   
   ImagesLib(ArrayList<String> imagesPath) {
@@ -47,8 +47,8 @@ public class ImagesLib {
     
     this.adjustScaleFactor(image);
     
-    float centerX = (width - image.width * this.scaleFactor) / 2;
-    float centerY = (height - image.height * this.scaleFactor) / 2;
+    float centerX = (width - image.width * this.scaleFactor) / 2 + 1;
+    float centerY = (height - image.height * this.scaleFactor) / 2 + 1;
     
     for (int x = 0; x < image.width; x++) {
       for (int y = 0; y < image.height; y++) {

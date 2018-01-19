@@ -18,8 +18,8 @@ ArrayList<String> images = new ArrayList<String>();
 ImagesLib imagesLib;
 Bubbles bubbles;
 
-float middleWidth = width / 2;
-float middleHeight = height / 2;
+float middleWidth = 1500 / 2;
+float middleHeight = 1000 / 2;
 
 Boolean starting = true;
 
@@ -28,7 +28,8 @@ public void pre() {
 
 public void setup() {
   
-  // fullScreen();
+  //fullScreen();
+  //frameRate(1);
 
   images.add("assets/oli_eye.jpg");
   images.add("assets/pedro.jpg");
@@ -49,8 +50,10 @@ public void draw() {
   //   noLoop();
   // }
 
-  //translateSketch();
-  //drawPattern();
+  // translateSketch(4);
+  drawPattern();
+
+  
   
   bubbles.update();
   bubbles.draw();
@@ -63,9 +66,9 @@ public void draw() {
   }
 }
 
-public void translateSketch() {
-  scale(0.5f);
-  translate(width / 2, height / 2);
+public void translateSketch(float ratio) {
+  scale(1/ratio);
+  translate((width * ratio - width) / 2, (height * ratio - height) / 2);
 }
 
 public void drawPattern() {
@@ -75,6 +78,7 @@ public void drawPattern() {
     rect(0, 0, width, height);
     line(0, middleHeight, width, middleHeight);
     line(middleWidth, 0, middleWidth, height);
+    ellipse(middleWidth, middleHeight, 400, 400);
   popMatrix();
 }
 
@@ -133,12 +137,12 @@ public class Bubbles {
     float rnd = random(1);
     
     for (BubbleMatrix bubble : matrix) {
-      PVector start = new PVector(random(width), random(height));
+      PVector start = new PVector(bubble.x, bubble.y);
       
-      if (rnd > 0.5f) {
-        start = this.effectRadialIn(start);
+      if (rnd > 1) {
+        start = this.effectRadial(start);
       } else {
-        start = this.effectWaveIn(start);
+        start = this.effectWave(start);
       }
       
       this.bubbles.add(new Bubble(start.x, start.y, bubble.x, bubble.y, bubble.r, bubble.c));
@@ -164,7 +168,7 @@ public class Bubbles {
             this.effectOutTriggered = true;
 
             PVector target = new PVector(bubble.location.x, bubble.location.y);
-            target = this.effectRadialIn(target);
+            target = this.effectRadial(target);
             bubble.setTarget(target.x, target.y);
           }
         }
@@ -178,11 +182,12 @@ public class Bubbles {
     }
   }
   
-  private PVector effectRadialIn(PVector vector) {
+  private PVector effectRadial(PVector vector) {
     PVector vectorMiddle = new PVector(width / 2, height / 2);
+    float screenMagnitude = this.getScreenMagnitude();
     
     PVector vectorResult = PVector.sub(vector, vectorMiddle);
-    float magnitude = map(random(1), 0, 1, 1000, 1400);
+    float magnitude = map(random(1), 0, 1, screenMagnitude * 1.3f, screenMagnitude * 1.7f);
 
     vectorResult.setMag(magnitude);
     vectorResult.add(vectorMiddle);
@@ -190,38 +195,35 @@ public class Bubbles {
     return vectorResult;
   }
   
-  private PVector effectWaveIn(PVector vector) {
+  private PVector effectWave(PVector vector) {
     PVector vectorMiddle = new PVector(width / 2, height / 2);
     
     int extend = ceil(random(0, 4));
-    PVector vectorResult = PVector.sub(vectorMiddle, vector).add(vector);
 
     switch (extend) {
       case 1:
-        vectorResult.x *= -1;
+        vectorMiddle.x -= width / 2 * 1.2f;
         break;
       case 2:
-        vectorResult.y *= -1;
+        vectorMiddle.y -= height / 2 * 1.2f;
         break;
       case 3:
-        vectorResult.x += width;
+        vectorMiddle.x += width / 2 * 1.2f;
         break;
       case 4:
-        vectorResult.y += height;
+        vectorMiddle.y += height / 2 * 1.2f;
         break;
     }
 
-    return vectorResult;
+    return vectorMiddle;
   }
 
-  private PVector randomLocation() {
-    PVector vector = PVector.random2D();
+  private float getScreenMagnitude() {
+    PVector origin = new PVector(0, height);
+    PVector center = new PVector(middleWidth, middleHeight);
+    PVector result = PVector.sub(center, origin);
 
-    if (vector.x < width / 2 && vector.y < height /2) {
-
-    }
-
-    return vector;
+    return result.mag();
   }
 }
 public class ImagesLib {
@@ -229,7 +231,7 @@ public class ImagesLib {
   ArrayList<PImage> images = new ArrayList<PImage>();
   
   int scaleFactor;
-  int dpi = 80;
+  int dpi = 90;
   int currentImage = -1;
   
   ImagesLib(ArrayList<String> imagesPath) {
@@ -273,8 +275,8 @@ public class ImagesLib {
     
     this.adjustScaleFactor(image);
     
-    float centerX = (width - image.width * this.scaleFactor) / 2;
-    float centerY = (height - image.height * this.scaleFactor) / 2;
+    float centerX = (width - image.width * this.scaleFactor) / 2 + 1;
+    float centerY = (height - image.height * this.scaleFactor) / 2 + 1;
     
     for (int x = 0; x < image.width; x++) {
       for (int y = 0; y < image.height; y++) {
@@ -311,7 +313,7 @@ public class Particle extends Sprite {
   Boolean targetReached;
   
   float SLOW_DOWN_DISTANCE;
-  float MAX_SPEED;
+  float SPEED;
   float INERTIA;
   
   Particle(float x, float y, float radius) {
@@ -322,9 +324,9 @@ public class Particle extends Sprite {
     
     this.targetReached = false;
     
-    this.SLOW_DOWN_DISTANCE = 65;
-    this.MAX_SPEED = 10;
-    this.INERTIA = 1;
+    this.SLOW_DOWN_DISTANCE = 150;
+    this.SPEED = 15;
+    this.INERTIA = 20;
   }
   
   public void setTarget(float x, float y) {
@@ -337,11 +339,13 @@ public class Particle extends Sprite {
     this.targetReached = false;
   }
   
-  public void update() {
+  public @Override
+  void update() {
     if (!this.targetReached) {
       this.behaviors();
       
-      this.location.add(this.velocity);
+      //this.location.add(this.velocity);
+      super.update();
       
       this.velocity.add(this.acceleration);
       this.acceleration.mult(0);
@@ -364,7 +368,7 @@ public class Particle extends Sprite {
   private PVector forceJoinTarget(PVector target) {
     PVector desired = PVector.sub(target, this.location);
     float distance = desired.mag();
-    float speed = this.MAX_SPEED;
+    float speed = this.SPEED;
     float inertia = this.INERTIA;
 
     if (distance < this.SLOW_DOWN_DISTANCE) {
@@ -415,7 +419,7 @@ public class Sprite {
     popMatrix();
   }
 }
-  public void settings() {  size(1000, 800); }
+  public void settings() {  size(1500, 1000); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "Showtime" };
     if (passedArgs != null) {
