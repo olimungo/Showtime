@@ -38,7 +38,7 @@ public class Bubbles {
             this.allTargetsReached = true;
             this.effectOutTriggered = true;
 
-            PVector target = new PVector(random(width), random(height));
+            PVector target = new PVector(bubble.location.x, bubble.location.y);
             target = this.effectRadialIn(target);
             bubble.setTarget(target.x, target.y);
           }

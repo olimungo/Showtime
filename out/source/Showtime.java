@@ -79,28 +79,20 @@ public void drawPattern() {
 }
 
 public void mousePressed() {
-  println("toto");
-  starting = false;
-  loop();
+  frameRate(1);
+}
+
+public void mouseReleased() {
+  frameRate(60);
 }
 public class Bubble extends Particle {
-  PVector originalLocation;
   int fillColor;
   
   Bubble(float xStart, float yStart, float xTarget, float yTarget, float radius, int fillColor) {
     super(xStart, yStart, radius);
     super.setTarget(xTarget, yTarget);
     
-    this.originalLocation = new PVector(xStart, yStart);
-    
     this.fillColor = fillColor;
-  }
-  
-  public @Override
-  void update() {
-    if (!this.targetReached) {
-      super.update();
-    }
   }
   
   public @Override
@@ -115,7 +107,7 @@ public class Bubble extends Particle {
   }
   
   public void getBack() {
-    super.setTarget(this.originalLocation.x, this.originalLocation.y);
+    //super.setTarget(this.originalLocation.x, this.originalLocation.y);
   }
 }
 public class BubbleMatrix {
@@ -171,11 +163,9 @@ public class Bubbles {
             this.allTargetsReached = true;
             this.effectOutTriggered = true;
 
-            PVector target = new PVector(random(width), random(height));
+            PVector target = new PVector(bubble.location.x, bubble.location.y);
             target = this.effectRadialIn(target);
             bubble.setTarget(target.x, target.y);
-
-            // bubble.getBack();
           }
         }
       }
@@ -239,7 +229,7 @@ public class ImagesLib {
   ArrayList<PImage> images = new ArrayList<PImage>();
   
   int scaleFactor;
-  int dpi = 90;
+  int dpi = 80;
   int currentImage = -1;
   
   ImagesLib(ArrayList<String> imagesPath) {
@@ -348,15 +338,17 @@ public class Particle extends Sprite {
   }
   
   public void update() {
-    this.behaviors();
-    
-    this.location.add(this.velocity);
-    
-    this.velocity.add(this.acceleration);
-    this.acceleration.mult(0);
-    
-    if (abs(this.location.x - this.target.x) < 0.5f && abs(this.location.y - this.target.y) < 0.5f) {
-        this.targetReached = true;
+    if (!this.targetReached) {
+      this.behaviors();
+      
+      this.location.add(this.velocity);
+      
+      this.velocity.add(this.acceleration);
+      this.acceleration.mult(0);
+      
+      if (abs(this.location.x - this.target.x) < 0.5f && abs(this.location.y - this.target.y) < 0.5f) {
+          this.targetReached = true;
+      }
     }
   }
   

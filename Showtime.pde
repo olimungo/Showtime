@@ -63,7 +63,9 @@ void drawPattern() {
 }
 
 void mousePressed() {
-  println("toto");
-  starting = false;
-  loop();
+  frameRate(1);
+}
+
+void mouseReleased() {
+  frameRate(60);
 }

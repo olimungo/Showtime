@@ -32,15 +32,17 @@ public class Particle extends Sprite {
   }
   
   void update() {
-    this.behaviors();
-    
-    this.location.add(this.velocity);
-    
-    this.velocity.add(this.acceleration);
-    this.acceleration.mult(0);
-    
-    if (abs(this.location.x - this.target.x) < 0.5 && abs(this.location.y - this.target.y) < 0.5) {
-        this.targetReached = true;
+    if (!this.targetReached) {
+      this.behaviors();
+      
+      this.location.add(this.velocity);
+      
+      this.velocity.add(this.acceleration);
+      this.acceleration.mult(0);
+      
+      if (abs(this.location.x - this.target.x) < 0.5 && abs(this.location.y - this.target.y) < 0.5) {
+          this.targetReached = true;
+      }
     }
   }
   
