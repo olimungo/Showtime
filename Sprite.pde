@@ -2,12 +2,15 @@ public class Sprite {
   PVector location;
   PVector velocity;
 
+  int ellapsedTime;
   float radius;
   
   Sprite(float x, float y, float radius) {
     this.location = new PVector(x, y);
     this.velocity = new PVector();
     this.radius = radius;
+
+    this.ellapsedTime = millis();
   }
   
   void setPosition(float x, float y) {
@@ -21,6 +24,16 @@ public class Sprite {
   }
   
   void update() {
+    float timeCorrection = 1;
+    int currentTime = millis();
+
+    if (currentTime - this.ellapsedTime < 500) {
+      timeCorrection = map(currentTime - this.ellapsedTime, 1,  500, 1/500, 1);
+    }
+
+    this.ellapsedTime = currentTime;
+
+    this.velocity.mult(timeCorrection);
     this.location.add(this.velocity);
   }
   

@@ -1,6 +1,7 @@
 public class Particle extends Sprite {
   PVector target;
   PVector acceleration;
+  PVector inertia;
   
   Boolean targetReached;
   
@@ -16,9 +17,9 @@ public class Particle extends Sprite {
     
     this.targetReached = false;
     
-    this.SLOW_DOWN_DISTANCE = 150;
-    this.SPEED = 15;
-    this.INERTIA = 20;
+    this.SLOW_DOWN_DISTANCE = 70;
+    this.SPEED = 300;
+    this.INERTIA = .03;
   }
   
   void setTarget(float x, float y) {
@@ -36,7 +37,6 @@ public class Particle extends Sprite {
     if (!this.targetReached) {
       this.behaviors();
       
-      //this.location.add(this.velocity);
       super.update();
       
       this.velocity.add(this.acceleration);
@@ -50,6 +50,7 @@ public class Particle extends Sprite {
   
   void applyForce(PVector force) {
     this.acceleration.add(force);
+    //println("acc: " + this.acceleration);
   }
   
   private void behaviors() {
@@ -64,15 +65,15 @@ public class Particle extends Sprite {
     float inertia = this.INERTIA;
 
     if (distance < this.SLOW_DOWN_DISTANCE) {
-      inertia *= 10;
-      speed = map(distance, 0, this.SLOW_DOWN_DISTANCE, 0, speed * 0.3);
+      //inertia *= 10;
+      speed = map(distance, 0, this.SLOW_DOWN_DISTANCE, 0, speed);
     }
 
     desired.setMag(speed);
     
     PVector steer = PVector.sub(desired, this.velocity);
     
-    steer.limit(inertia);
+    desired.limit(inertia);
 
     return steer;
     }

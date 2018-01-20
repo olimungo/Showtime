@@ -3,7 +3,7 @@ public class ImagesLib {
   ArrayList<PImage> images = new ArrayList<PImage>();
   
   int scaleFactor;
-  int dpi = 90;
+  int dpi = 60;
   int currentImage = -1;
   
   ImagesLib(ArrayList<String> imagesPath) {

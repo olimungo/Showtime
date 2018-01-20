@@ -1,9 +1,12 @@
 ArrayList<String> images = new ArrayList<String>();
 ImagesLib imagesLib;
 Bubbles bubbles;
+Movers movers;
+PFont font;
+String msg = "";
 
-float middleWidth = 1500 / 2;
-float middleHeight = 1000 / 2;
+float middleWidth = 1000 / 2;
+float middleHeight = 800 / 2;
 
 Boolean starting = true;
 
@@ -11,13 +14,17 @@ void pre() {
 }
 
 void setup() {
-  size(1500, 1000);
-  //fullScreen();
-  //frameRate(1);
+  size(1000, 800);
+  // fullScreen();
+  // frameRate(1);
+
+  font = loadFont("HelveticaNeue-48.vlw");
+  textFont(font, 48);
+  textSize(30);
 
   images.add("assets/oli_eye.jpg");
-  images.add("assets/pedro.jpg");
   images.add("assets/we-love-art.jpg");
+  images.add("assets/pedro.jpg");
   images.add("assets/maeva_oli.png");
   images.add("assets/heart.png");
   images.add("assets/maeva1.png");
@@ -25,6 +32,8 @@ void setup() {
   imagesLib = new ImagesLib(images);
 
   bubbles = new Bubbles(imagesLib.getNextImage());
+
+  movers = new Movers();
 }
 
 void draw() {
@@ -34,9 +43,12 @@ void draw() {
   //   noLoop();
   // }
 
-  // translateSketch(4);
-  drawPattern();
+  // translateSketch(1.5);
+  // drawPattern();
+  showFrameRate();
 
+  movers.update();
+  movers.draw();
   
   
   bubbles.update();
@@ -66,10 +78,23 @@ void drawPattern() {
   popMatrix();
 }
 
+void showFrameRate() {
+  if (frameCount % 5 == 0) {
+    msg = String.format("%2.0f / %d / %d", frameRate, frameCount, millis());
+  }
+
+  pushMatrix();
+    fill(255);
+    text(msg, 30, height - 40);
+  popMatrix();
+}
+
 void mousePressed() {
-  frameRate(1);
+  // frameRate(5);
+  noLoop();
 }
 
 void mouseReleased() {
-  frameRate(60);
+  // frameRate(60);
+  loop();
 }
