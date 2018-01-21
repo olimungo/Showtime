@@ -16,7 +16,6 @@ public class Bubbles {
         start = this.effectWave(start);
       }
       
-      // this.bubbles.add(new Bubble(bubble.x, bubble.y, start.x, start.y, bubble.r, bubble.c));
       this.bubbles.add(new Bubble(start.x, start.y, bubble.x, bubble.y, bubble.r, bubble.c));
     }
   }
@@ -59,9 +58,8 @@ public class Bubbles {
     float screenMagnitude = this.getScreenMagnitude();
     
     PVector vectorResult = PVector.sub(vector, vectorMiddle);
-    float magnitude = map(random(1), 0, 1, screenMagnitude * 1.05, screenMagnitude * 1.05);
 
-    vectorResult.setMag(magnitude);
+    vectorResult.setMag(screenMagnitude * 1.05);
     vectorResult.add(vectorMiddle);
 
     return vectorResult;

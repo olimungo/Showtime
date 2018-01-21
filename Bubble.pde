@@ -2,7 +2,7 @@ public class Bubble extends Particle {
   color fillColor;
   
   Bubble(float xStart, float yStart, float xTarget, float yTarget, float radius, color fillColor) {
-    super(xStart, yStart, radius);
+    super(xStart, yStart, radius, 4, 2, 50);
     super.setTarget(xTarget, yTarget);
     
     this.fillColor = fillColor;
@@ -17,9 +17,5 @@ public class Bubble extends Particle {
         ellipse(this.location.x, this.location.y, this.radius, this.radius);
       popMatrix();
     }
-  }
-  
-  void getBack() {
-    //super.setTarget(this.originalLocation.x, this.originalLocation.y);
   }
 }

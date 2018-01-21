@@ -2,99 +2,72 @@ ArrayList<String> images = new ArrayList<String>();
 ImagesLib imagesLib;
 Bubbles bubbles;
 Movers movers;
+Vehicle vehicle;
 PFont font;
 String msg = "";
+Helpers helpers;
 
 float middleWidth = 1000 / 2;
 float middleHeight = 800 / 2;
-
-Boolean starting = true;
 
 void pre() {
 }
 
 void setup() {
-  size(1000, 800);
-  // fullScreen();
-  // frameRate(1);
+    size(1000, 800);
+    //fullScreen();
+    //frameRate(1);
 
-  font = loadFont("HelveticaNeue-48.vlw");
-  textFont(font, 48);
-  textSize(30);
+    helpers = new Helpers();
 
-  images.add("assets/oli_eye.jpg");
-  images.add("assets/we-love-art.jpg");
-  images.add("assets/pedro.jpg");
-  images.add("assets/maeva_oli.png");
-  images.add("assets/heart.png");
-  images.add("assets/maeva1.png");
-  
-  imagesLib = new ImagesLib(images);
+    font = loadFont("HelveticaNeue-48.vlw");
+    textFont(font, 48);
+    textSize(30);
 
-  bubbles = new Bubbles(imagesLib.getNextImage());
+    images.add("assets/maeva1.png");
+    images.add("assets/oli_eye.jpg");
+    images.add("assets/pedro.jpg");
+    images.add("assets/maeva_oli.png");
+    images.add("assets/we-love-art.jpg");
+    images.add("assets/heart.png");
 
-  movers = new Movers();
+    imagesLib = new ImagesLib(images);
+    bubbles = new Bubbles(imagesLib.getNextImage());
+    movers = new Movers();
+    vehicle = new Vehicle(random(width), random(height));
 }
 
 void draw() {
-  background(0);
+    background(0);
 
-  // if (starting) {
-  //   noLoop();
-  // }
+    helpers.translateSketch(1.5);
+    helpers.drawPattern();
 
-  // translateSketch(1.5);
-  // drawPattern();
-  showFrameRate();
+    // bubbles.update();
+    // bubbles.draw();
 
-  movers.update();
-  movers.draw();
-  
-  
-  bubbles.update();
-  bubbles.draw();
-  
-  if (bubbles.allTargetsReached && !bubbles.effectOutEnded) {
-  }
-  
-  if (bubbles.effectOutEnded) {
-    bubbles = new Bubbles(imagesLib.getNextImage());
-  }
-}
+    // movers.update();
+    // movers.draw();
 
-void translateSketch(float ratio) {
-  scale(1/ratio);
-  translate((width * ratio - width) / 2, (height * ratio - height) / 2);
-}
+    vehicle.update();
+    vehicle.draw();
 
-void drawPattern() {
-  pushMatrix();
-    stroke(255);
-    noFill();
-    rect(0, 0, width, height);
-    line(0, middleHeight, width, middleHeight);
-    line(middleWidth, 0, middleWidth, height);
-    ellipse(middleWidth, middleHeight, 400, 400);
-  popMatrix();
-}
+    if (bubbles.allTargetsReached && !bubbles.effectOutEnded) {
+    }
 
-void showFrameRate() {
-  if (frameCount % 5 == 0) {
-    msg = String.format("%2.0f / %d / %d", frameRate, frameCount, millis());
-  }
+    if (bubbles.effectOutEnded) {
+        bubbles = new Bubbles(imagesLib.getNextImage());
+    }
 
-  pushMatrix();
-    fill(255);
-    text(msg, 30, height - 40);
-  popMatrix();
+    helpers.showFrameRate();
 }
 
 void mousePressed() {
-  // frameRate(5);
-  noLoop();
+    // frameRate(5);
+    noLoop();
 }
 
 void mouseReleased() {
-  // frameRate(60);
-  loop();
+    // frameRate(60);
+    loop();
 }
