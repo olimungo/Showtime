@@ -10,12 +10,10 @@ public class Bubble extends Particle {
   
   @Override
   void draw() {
-    if (radius > 0) {
-      pushMatrix();
-        fill(this.fillColor);
-        noStroke();
-        ellipse(this.location.x, this.location.y, this.radius, this.radius);
-      popMatrix();
+    if (this.radius > 0) {
+      fill(this.fillColor);
+      noStroke();
+      ellipse(this.location.x, this.location.y, this.radius, this.radius);
     }
   }
 }

@@ -20,7 +20,7 @@ public class Bubbles {
             for (Bubble bubble : this.bubbles) {
                 bubble.update();
 
-                allTargetsReached = allTargetsReached && bubble.targetReached;
+                allTargetsReached = allTargetsReached && bubble.getTargetReached();
             }
 
             if (allTargetsReached) {
@@ -34,8 +34,8 @@ public class Bubbles {
                         PVector target = new PVector(bubble.location.x, bubble.location.y);
                         target = this.effectRadial(target);
                         bubble.setTarget(target.x, target.y);
-                        bubble.maxSpeed = 10;
-                        bubble.maxForce = 3;
+                        bubble.setMaxSpeed(10);
+                        bubble.setMaxSteer(3);
                     }
                 }
             }

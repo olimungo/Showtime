@@ -43,14 +43,14 @@ void draw() {
     //helpers.translateSketch(1.5);
     helpers.drawPattern();
 
-    bubbles.update();
-    bubbles.draw();
+    // bubbles.update();
+    // bubbles.draw();
 
     // movers.update();
     // movers.draw();
 
-    // vehicle.update();
-    // vehicle.draw();
+    vehicle.update();
+    vehicle.draw();
 
     if (bubbles.allTargetsReached && !bubbles.effectOutEnded) {
     }

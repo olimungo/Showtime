@@ -1,6 +1,6 @@
 public class Movers {
   ArrayList<Particle> particles = new ArrayList<Particle>();
-  int COUNT_PARTICLE = 40000;
+  int COUNT_PARTICLE = 10;
   
   Movers() {
     for (int i = 0; i < this.COUNT_PARTICLE; i++) {

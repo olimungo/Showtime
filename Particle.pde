@@ -1,14 +1,14 @@
 public class Particle extends Sprite {
-    PVector target;
     PVector acceleration;
+    PVector target;
 
-    Boolean targetReached;
+    private Boolean targetReached;
+    private float slowDownDistance;
+    private float maxSpeed;
+    private float maxSteer;
+    private float targetDistanceThreshold = .05;
 
-    float slowDownDistance;
-    float maxSpeed;
-    float maxForce;
-
-    Particle(float x, float y, float radius, float maxSpeed, float maxForce, float slowDownDistance) {
+    Particle(float x, float y, float radius, float maxSpeed, float maxSteer, float slowDownDistance) {
         super(x, y, radius);
 
         this.target = new PVector(x ,y);
@@ -18,18 +18,52 @@ public class Particle extends Sprite {
 
         this.slowDownDistance = slowDownDistance;
         this.maxSpeed = maxSpeed;
-        this.maxForce = maxForce;
+        this.maxSteer = maxSteer;
+    }
+  
+    PVector getTarget() {
+        return this.target;
     }
   
     void setTarget(float x, float y) {
-        this.target.x = x;
-        this.target.y = y;
+        this.target = new PVector(x, y);
 
-        this.velocity = new PVector();
         this.velocity = new PVector();
         this.acceleration = new PVector();
 
         this.targetReached = false;
+    }
+  
+    Boolean getTargetReached() {
+        return this.targetReached;
+    }
+
+    void setTargetDistanceThreshold (float value) {
+        this.targetDistanceThreshold = value;
+    }
+
+    float getMaxSpeed () {
+        return this.maxSpeed;
+    }
+
+    void setMaxSpeed (float value) {
+        this.maxSpeed = value;
+    }
+
+    float getMaxSteer () {
+        return this.maxSteer;
+    }
+
+    void setMaxSteer (float value) {
+        this.maxSteer = value;
+    }
+
+    float getSlowDownDistance () {
+        return this.slowDownDistance;
+    }
+
+    void setSlowDownDistance (float value) {
+        this.slowDownDistance = value;
     }
   
     @Override
@@ -42,11 +76,20 @@ public class Particle extends Sprite {
             this.velocity.add(this.acceleration);
             this.acceleration.mult(0);
 
-            if (abs(this.location.x - this.target.x) < 0.5 && abs(this.location.y - this.target.y) < 0.5) {
+            if (abs(this.location.x - this.target.x) < this.targetDistanceThreshold
+                && abs(this.location.y - this.target.y) < this.targetDistanceThreshold) {
                 this.targetReached = true;
-                // println("target reached");
             }
         }
+    }
+
+    @Override
+    void draw() {
+        super.draw();
+
+        stroke(255, 0, 0);
+        line(this.target.x - 5, this.target.y, this.target.x + 5, this.target.y);
+        line(this.target.x, this.target.y - 5, this.target.x, this.target.y + 5);
     }
   
     void behaviors() {
@@ -61,21 +104,19 @@ public class Particle extends Sprite {
     private PVector arrive(PVector target) {
         PVector desired = PVector.sub(target, this.location);
         float distance = desired.mag();
-        float speed = this.maxSpeed;
-        float force = this.maxForce;
+        float maxSpeed = this.maxSpeed;
+        float maxSteer = this.maxSteer;
 
         if (distance < this.slowDownDistance) {
-            force *= 10;
-            speed = map(distance, 0, this.slowDownDistance, 0, speed);
+            maxSteer *= 10;
+            maxSpeed = map(distance, 0, this.slowDownDistance, 0, maxSpeed);
         }
 
-        //println(speed);
-
-        desired.setMag(speed);
+        desired.setMag(maxSpeed);
 
         PVector steer = PVector.sub(desired, this.velocity);
 
-        steer.limit(force);
+        steer.limit(maxSteer);
 
         return steer;
     }
