@@ -1,13 +1,7 @@
 public class Vehicle extends Particle {
     Vehicle(float x, float y) {
-        super(x, y, 1, 2, 5, 50);
+        super(x, y, 0, 5, .05, 100);
         super.setTarget(random(width), random(height));
-    }
-
-    @Override
-    void update() {
-        super.setTarget(mouseX, mouseY); 
-        super.update();
     }
   
     @Override
@@ -21,19 +15,21 @@ public class Vehicle extends Particle {
         popMatrix();
     }
   
-    // @Override
-    // void behaviors() {
-    //     PVector join = this.seek(this.target);
-    //     super.applyForce(join);
-    // }
+    @Override
+    void behaviors() {
+        PVector seek = this.seek(this.target);
+        super.applyForce(seek);
+    }
   
     private PVector seek(PVector target) {
-        PVector desired = PVector.sub(target, this.location);
+        PVector mouse = new PVector(mouseX, mouseY);
+        PVector desired = PVector.sub(mouse, this.location);
         float distance = desired.mag();
         float speed = this.maxSpeed;
-        float inertia = this.maxForce;
+        float force = this.maxForce;
 
         if (distance < this.slowDownDistance) {
+            force *= 10;
             speed = map(distance, 0, this.slowDownDistance, 0, speed);
         }
 
@@ -41,7 +37,7 @@ public class Vehicle extends Particle {
 
         PVector steer = PVector.sub(desired, this.velocity);
 
-        steer.limit(inertia);
+        steer.limit(force);
 
         return steer;
     }

@@ -20,7 +20,7 @@ public class Helpers {
 
     void showFrameRate() {
         if (frameCount % 5 == 0 || frameCount < 5) {
-        msg = String.format("%2.0f / %d / %d", frameRate, frameCount, millis());
+        msg = String.format("%2.0f / %d / %d / %d + %d", frameRate, frameCount, millis(), mouseX, mouseY);
         }
 
         pushMatrix();

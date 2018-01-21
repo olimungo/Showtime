@@ -2,7 +2,7 @@ public class Bubble extends Particle {
   color fillColor;
   
   Bubble(float xStart, float yStart, float xTarget, float yTarget, float radius, color fillColor) {
-    super(xStart, yStart, radius, 4, 2, 50);
+    super(xStart, yStart, radius, 5, 0.05, 100);
     super.setTarget(xTarget, yTarget);
     
     this.fillColor = fillColor;

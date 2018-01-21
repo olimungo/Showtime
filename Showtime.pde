@@ -14,7 +14,7 @@ void pre() {
 }
 
 void setup() {
-    size(1000, 800);
+    size(1000, 800, P2D);
     //fullScreen();
     //frameRate(1);
 
@@ -40,17 +40,17 @@ void setup() {
 void draw() {
     background(0);
 
-    helpers.translateSketch(1.5);
+    //helpers.translateSketch(1.5);
     helpers.drawPattern();
 
-    // bubbles.update();
-    // bubbles.draw();
+    bubbles.update();
+    bubbles.draw();
 
     // movers.update();
     // movers.draw();
 
-    vehicle.update();
-    vehicle.draw();
+    // vehicle.update();
+    // vehicle.draw();
 
     if (bubbles.allTargetsReached && !bubbles.effectOutEnded) {
     }

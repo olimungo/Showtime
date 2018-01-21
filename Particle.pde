@@ -25,8 +25,9 @@ public class Particle extends Sprite {
         this.target.x = x;
         this.target.y = y;
 
-        this.velocity = this.target.copy().normalize();
-        this.acceleration = this.velocity.copy().setMag(0);
+        this.velocity = new PVector();
+        this.velocity = new PVector();
+        this.acceleration = new PVector();
 
         this.targetReached = false;
     }
@@ -43,6 +44,7 @@ public class Particle extends Sprite {
 
             if (abs(this.location.x - this.target.x) < 0.5 && abs(this.location.y - this.target.y) < 0.5) {
                 this.targetReached = true;
+                // println("target reached");
             }
         }
     }
@@ -63,8 +65,11 @@ public class Particle extends Sprite {
         float force = this.maxForce;
 
         if (distance < this.slowDownDistance) {
+            force *= 10;
             speed = map(distance, 0, this.slowDownDistance, 0, speed);
         }
+
+        //println(speed);
 
         desired.setMag(speed);
 
