@@ -34,8 +34,8 @@ public class Bubbles {
                         PVector target = new PVector(bubble.location.x, bubble.location.y);
                         target = this.effectRadial(target);
                         bubble.setTarget(target.x, target.y);
-                        bubble.setMaxSpeed(10);
-                        bubble.setMaxSteer(3);
+                        bubble.maxSpeed = 10;
+                        bubble.maxSteer = 3;
                     }
                 }
             }

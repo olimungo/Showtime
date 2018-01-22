@@ -8,14 +8,12 @@ public class Helpers {
     }
 
     void drawPattern() {
-        pushMatrix();
-            stroke(255);
-            noFill();
-            rect(0, 0, width, height);
-            line(0, middleHeight, width, middleHeight);
-            line(middleWidth, 0, middleWidth, height);
-            ellipse(middleWidth, middleHeight, 400, 400);
-        popMatrix();
+        stroke(255);
+        noFill();
+        rect(0, 0, width, height);
+        line(0, middleHeight, width, middleHeight);
+        line(middleWidth, 0, middleWidth, height);
+        ellipse(middleWidth, middleHeight, 400, 400);
     }
 
     void showFrameRate() {
@@ -23,9 +21,9 @@ public class Helpers {
         msg = String.format("%2.0f / %d / %d / %d + %d", frameRate, frameCount, millis(), mouseX, mouseY);
         }
 
-        pushMatrix();
-            fill(255, 255, 255, 100);
-            text(msg, 30, height - 40);
-        popMatrix();
+        fill(255, 255, 255, 100);
+        textSize(30);
+        textAlign(LEFT);
+        text(msg, 30, height - 40);
     }
 }

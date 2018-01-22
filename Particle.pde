@@ -1,12 +1,13 @@
 public class Particle extends Sprite {
     PVector acceleration;
-    PVector target;
+    PVector accelerationCopy;
+    float slowDownDistance;
+    float maxSpeed;
+    float maxSteer;
+    float targetDistanceThreshold = .05;
 
+    private PVector target;
     private Boolean targetReached;
-    private float slowDownDistance;
-    private float maxSpeed;
-    private float maxSteer;
-    private float targetDistanceThreshold = .05;
 
     Particle(float x, float y, float radius, float maxSpeed, float maxSteer, float slowDownDistance) {
         super(x, y, radius);
@@ -30,40 +31,13 @@ public class Particle extends Sprite {
 
         this.velocity = new PVector();
         this.acceleration = new PVector();
+        this.accelerationCopy = new PVector();
 
         this.targetReached = false;
     }
-  
+
     Boolean getTargetReached() {
         return this.targetReached;
-    }
-
-    void setTargetDistanceThreshold (float value) {
-        this.targetDistanceThreshold = value;
-    }
-
-    float getMaxSpeed () {
-        return this.maxSpeed;
-    }
-
-    void setMaxSpeed (float value) {
-        this.maxSpeed = value;
-    }
-
-    float getMaxSteer () {
-        return this.maxSteer;
-    }
-
-    void setMaxSteer (float value) {
-        this.maxSteer = value;
-    }
-
-    float getSlowDownDistance () {
-        return this.slowDownDistance;
-    }
-
-    void setSlowDownDistance (float value) {
-        this.slowDownDistance = value;
     }
   
     @Override
@@ -74,11 +48,16 @@ public class Particle extends Sprite {
             super.update();
 
             this.velocity.add(this.acceleration);
+
+            this.accelerationCopy.set(this.acceleration.x, this.acceleration.y);
+
             this.acceleration.mult(0);
 
             if (abs(this.location.x - this.target.x) < this.targetDistanceThreshold
                 && abs(this.location.y - this.target.y) < this.targetDistanceThreshold) {
                 this.targetReached = true;
+                this.velocity.mult(0.000000001); // Don't set it to 0, so we keep the heading
+                this.accelerationCopy.mult(0);
             }
         }
     }
@@ -87,6 +66,7 @@ public class Particle extends Sprite {
     void draw() {
         super.draw();
 
+        // Target
         stroke(255, 0, 0);
         line(this.target.x - 5, this.target.y, this.target.x + 5, this.target.y);
         line(this.target.x, this.target.y - 5, this.target.x, this.target.y + 5);

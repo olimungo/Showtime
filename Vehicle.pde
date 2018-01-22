@@ -1,12 +1,19 @@
 public class Vehicle extends Particle {
-    color normalColor = color(255);
-    color targetReachedColor = color(0, 255, 0);
-    color currentColor = normalColor;
+    public static final int SEEK = 1;
+    public static final int FLEE = 2;
 
-    Vehicle(float x, float y) {
-        super(x, y, 0, 5, .05, 100);
+    PVector fleeOrSeekCopy = new PVector();
+
+    private color normalColor = color(255);
+    private color targetReachedColor = color(0, 255, 0);
+    private color currentColor = normalColor;
+    private int mode;
+
+    Vehicle(float x, float y, int mode) {
+        super(x, y, 0, 3, .01, 70);
         super.setTarget(random(width), random(height));
-        super.setTargetDistanceThreshold(5);
+        super.targetDistanceThreshold = 5;
+        this.mode = mode;
     }
 
     @Override
@@ -21,6 +28,7 @@ public class Vehicle extends Particle {
 
         if (this.getTargetReached()) {
             this.currentColor = this.targetReachedColor;
+            this.fleeOrSeekCopy.mult(0);
         }
     }
   
@@ -34,34 +42,68 @@ public class Vehicle extends Particle {
             translate(this.location.x, this.location.y);
             float angle = this.velocity.heading();
             rotate(angle);
+            stroke(this.currentColor);
+            noFill();
             triangle(-15, -10, 15, 0, -15, 10);
         popMatrix();
     }
   
     @Override
     void behaviors() {
-        PVector seek = this.seek(this.target);
-        super.applyForce(seek);
+        PVector mouse = new PVector(mouseX, mouseY);
+        PVector force;
+
+        super.behaviors();
+
+        if (mode == Vehicle.SEEK) {
+            force = this.seek(mouse);
+
+        } else {
+            force = this.flee(mouse);
+        }
+
+        super.applyForce(force);
     }
   
     private PVector seek(PVector target) {
-        PVector mouse = new PVector(mouseX, mouseY);
-        PVector desired = PVector.sub(mouse, this.location);
+        PVector desired = PVector.sub(target, this.location);
         float distance = desired.mag();
-        float speed = this.getMaxSpeed();
-        float force = this.getMaxSteer();
+        float maxSpeed = this.maxSpeed;
 
-        if (distance < this.getSlowDownDistance()) {
-            force *= 10;
-            speed = map(distance, 0, this.getSlowDownDistance(), 0, speed);
+        if (distance < this.slowDownDistance) {
+            maxSpeed = map(distance, 0, this.slowDownDistance, 0, maxSpeed);
         }
 
-        desired.setMag(speed);
+        desired.setMag(maxSpeed);
 
         PVector steer = PVector.sub(desired, this.velocity);
 
-        steer.limit(force);
+        steer.limit(this.velocity.mag() / 2);
+
+        this.fleeOrSeekCopy.set(steer.x, steer.y);
 
         return steer;
+    }
+  
+    private PVector flee(PVector target) {
+        PVector desired = PVector.sub(target, this.location);
+        float distance = desired.mag();
+
+        if (distance < 100) {
+            desired.setMag(this.maxSpeed);
+            desired.mult(-1);
+
+            PVector steer = PVector.sub(desired, this.velocity);
+
+            steer.limit(this.velocity.mag());
+
+            this.fleeOrSeekCopy.set(steer.x, steer.y);
+
+            return steer;
+        } else {
+            this.fleeOrSeekCopy.set(0, 0);
+
+            return new PVector();
+        }
     }
 }
