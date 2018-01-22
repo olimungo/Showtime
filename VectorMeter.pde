@@ -3,7 +3,7 @@ public class VectorMeter {
     int lengthFactor = 10;
     String label = "";
 
-    private int radius = 100;
+    private int radius = 60;
 
     VectorMeter(float x, float y) {
         this.position = new PVector(x ,y);
@@ -19,12 +19,12 @@ public class VectorMeter {
 
             fill(255);
             textAlign(CENTER);
-            textSize(15);
-            text(this.label, 0, -25);
+            textSize(11);
+            text(this.label, 0, -15);
 
             stroke(255);
             noFill();
-            ellipse(0, 0, 100, 100);
+            ellipse(0, 0, radius, radius);
 
             // println(this.vector.mag());
 

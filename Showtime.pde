@@ -3,9 +3,11 @@ ImagesLib imagesLib;
 Bubbles bubbles;
 MoversShow moversShow;
 VehicleShow vehicleShow;
+Starfield starfield;
 PFont font;
 String msg = "";
 Helpers helpers;
+Boolean slowFrameRate = false;
 
 float middleWidth = 1000 / 2;
 float middleHeight = 800 / 2;
@@ -23,30 +25,33 @@ void setup() {
     font = loadFont("HelveticaNeue-48.vlw");
     textFont(font, 48);
 
-    images.add("assets/maeva1.png");
     images.add("assets/oli_eye.jpg");
     images.add("assets/pedro.jpg");
-    images.add("assets/maeva_oli.png");
     images.add("assets/we-love-art.jpg");
+    images.add("assets/maeva1.png");
+    images.add("assets/maeva_oli.png");
     images.add("assets/heart.png");
 
     imagesLib = new ImagesLib(images);
     bubbles = new Bubbles(imagesLib.getNextImage());
     moversShow = new MoversShow();
     vehicleShow = new VehicleShow();
+    starfield = new Starfield();
 }
 
 void draw() {
     background(0);
 
     // helpers.translateSketch(1.5);
-    helpers.drawPattern();
+    //helpers.drawPattern();
 
-    // bubbles.update();
-    // bubbles.draw();
+    bubbles.update();
+    bubbles.draw();
 
-    moversShow.update();
-    moversShow.draw();
+    // moversShow.update();
+    // moversShow.draw();
+
+    // starfield.draw();
 
     // vehicleShow.update();
     // vehicleShow.draw();
@@ -58,11 +63,17 @@ void draw() {
         bubbles = new Bubbles(imagesLib.getNextImage());
     }
 
-    helpers.showFrameRate();
+    //helpers.showFrameRate();
 }
 
 void mousePressed() {
-    frameRate(10);
+    if (slowFrameRate) {
+        frameRate(60);
+    } else {
+        frameRate(10);
+    }
+
+    slowFrameRate = !slowFrameRate;
     noLoop();
 }
 

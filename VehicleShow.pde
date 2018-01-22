@@ -12,13 +12,13 @@ public class VehicleShow {
         vehicle = new Vehicle(random(width), random(height), randomMode);
         vehicle.setTarget(random(width), random(height));
 
-        vectorMeterVelocity = new VectorMeter(70, 70);
+        vectorMeterVelocity = new VectorMeter(50, 50);
         vectorMeterVelocity.lengthFactor = 15;
         vectorMeterVelocity.label = "VEL";
-        vectorMeterAcceleration = new VectorMeter(190, 70);
+        vectorMeterAcceleration = new VectorMeter(130, 50);
         vectorMeterAcceleration.lengthFactor = 100;
         vectorMeterAcceleration.label = "ACC";
-        vectorMeterMode = new VectorMeter(310, 70);
+        vectorMeterMode = new VectorMeter(210, 50);
         vectorMeterMode.lengthFactor = 100;
 
         this.setVectorMeterModeLabel(randomMode);
