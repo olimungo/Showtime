@@ -3,20 +3,22 @@ ImagesLib imagesLib;
 Bubbles bubbles;
 MoversShow moversShow;
 VehicleShow vehicleShow;
+RandomShow randomShow;
+FlowFieldShow flowFieldShow;
 Starfield starfield;
 PFont font;
 String msg = "";
 Helpers helpers;
 Boolean slowFrameRate = false;
 
-float middleWidth = 1000 / 2;
-float middleHeight = 800 / 2;
+float middleWidth = 1500 / 2;
+float middleHeight = 1000 / 2;
 
 void pre() {
 }
 
 void setup() {
-    size(1000, 800, P2D);
+    size(1500, 1000, P2D);
     //fullScreen();
     //frameRate(5);
 
@@ -36,6 +38,8 @@ void setup() {
     bubbles = new Bubbles(imagesLib.getNextImage());
     moversShow = new MoversShow();
     vehicleShow = new VehicleShow();
+    randomShow = new RandomShow();
+    flowFieldShow = new FlowFieldShow(20);
     starfield = new Starfield();
 }
 
@@ -45,8 +49,8 @@ void draw() {
     // helpers.translateSketch(1.5);
     //helpers.drawPattern();
 
-    bubbles.update();
-    bubbles.draw();
+    // bubbles.update();
+    // bubbles.draw();
 
     // moversShow.update();
     // moversShow.draw();
@@ -56,12 +60,11 @@ void draw() {
     // vehicleShow.update();
     // vehicleShow.draw();
 
-    if (bubbles.allTargetsReached && !bubbles.effectOutEnded) {
-    }
+    // randomShow.update();
+    // randomShow.draw();
 
-    if (bubbles.effectOutEnded) {
-        bubbles = new Bubbles(imagesLib.getNextImage());
-    }
+    flowFieldShow.update();
+    flowFieldShow.draw();
 
     //helpers.showFrameRate();
 }
